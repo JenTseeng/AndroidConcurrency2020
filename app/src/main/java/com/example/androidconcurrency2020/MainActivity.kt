@@ -30,7 +30,19 @@ class MainActivity : AppCompatActivity() {
      * Run some code
      */
     private fun runCode() {
-        log("Running code")
+        val runnable = object: Runnable {
+            override fun run() {
+                log("Operation from runnable")
+            }
+
+        }
+
+        val handler = Handler()
+        handler.post(runnable)
+
+        log("Synchronous operation 1")
+        log("Synchronous operation 2")
+        log("Synchronous operation 3")
     }
 
     /**
