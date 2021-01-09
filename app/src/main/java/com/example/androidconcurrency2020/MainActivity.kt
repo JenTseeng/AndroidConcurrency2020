@@ -2,6 +2,7 @@ package com.example.androidconcurrency2020
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,8 +31,11 @@ class MainActivity : AppCompatActivity() {
      * Run some code
      */
     private fun runCode() {
+        Handler().postAtTime({ log("posting at certain time")}, SystemClock.uptimeMillis()+4000)
 
-        Handler().post { log("Operation from runnable") }
+        Handler().postDelayed({ log("Operation from runnable 1") }, 1000)
+        Handler().postDelayed({ log("Operation from runnable 2") }, 2000)
+        Handler().postDelayed({ log("Operation from runnable 3") }, 3000)
 
         log("Synchronous operation 1")
         log("Synchronous operation 2")
