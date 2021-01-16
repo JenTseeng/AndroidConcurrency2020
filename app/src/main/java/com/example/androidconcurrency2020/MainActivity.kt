@@ -30,7 +30,15 @@ class MainActivity : AppCompatActivity() {
      * Run some code
      */
     private fun runCode() {
-
+        val runnable = Runnable {
+            for (i in 1..10) {
+                Log.i(LOG_TAG, "Looping $i")
+                Thread.sleep(1000)
+            }
+            Log.i(LOG_TAG, "All done!")
+        }
+        val thread = Thread(runnable)
+        thread.start()
     }
 
     /**
