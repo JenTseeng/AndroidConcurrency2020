@@ -2,15 +2,25 @@ package com.example.androidconcurrency2020
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androidconcurrency2020.databinding.ActivityMainBinding
 import kotlin.concurrent.thread
 
+private const val MESSAGE_KEY = "message_key"
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val handler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            val message = msg.data?.getString(MESSAGE_KEY)
+            log(message ?: "message was null")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +42,20 @@ class MainActivity : AppCompatActivity() {
      */
     private fun runCode() {
         thread(start = true) {
+            val bundle = Bundle()
             for (i in 1..10) {
-                Log.i(LOG_TAG, "Looping $i")
+                sendMessageToHandler("Looping $i", bundle)
                 Thread.sleep(1000)
             }
-            Log.i(LOG_TAG, "All done!")
+            sendMessageToHandler("All done!", bundle)
+        }
+    }
+
+    private fun sendMessageToHandler(message: String, bundle: Bundle) {
+        bundle.putString(MESSAGE_KEY, message)
+        Message().also {
+            it.data = bundle
+            handler.sendMessage(it)
         }
     }
 
